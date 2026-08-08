@@ -1,0 +1,115 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string" },
+        "walletBalance": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "email"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Order entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string" },
+        "date": { "type": "string" }
+      },
+      "required": ["type", "userEmail", "amount", "status"]
+    },
+    "Offer": {
+      "title": "Offer",
+      "description": "Telecom offer entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "operator": { "type": "string" }
+      },
+      "required": ["id", "title"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Support ticket entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "subject": { "type": "string" }
+      },
+      "required": ["id", "subject"]
+    },
+    "CallingCardStock": {
+      "title": "CallingCardStock",
+      "description": "Calling Card Stock entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "packageId": { "type": "string" },
+        "type": { "type": "string" },
+        "pin": { "type": "string" },
+        "password": { "type": "string" },
+        "expiryDate": { "type": "string" },
+        "cardImageUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "soldTo": { "type": "string" },
+        "soldAt": { "type": "string" },
+        "orderId": { "type": "string" }
+      },
+      "required": ["id", "packageId", "status"]
+    }
+  },
+  "firestore": {
+    "/calling_card_stock/{stockId}": {
+      "schema": { "$ref": "#/entities/CallingCardStock" },
+      "description": "Calling card credentials and voucher stock"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profile collection"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Orders collection"
+    },
+    "/offers/{offerId}": {
+      "schema": { "$ref": "#/entities/Offer" },
+      "description": "Offers collection"
+    },
+    "/tickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/SupportTicket" },
+      "description": "Tickets collection"
+    },
+    "/banners/{bannerId}": {
+      "schema": "object",
+      "description": "Banners collection"
+    },
+    "/notices/{noticeId}": {
+      "schema": "object",
+      "description": "Notices collection"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "object",
+      "description": "Notifications collection"
+    },
+    "/services/{serviceId}": {
+      "schema": "object",
+      "description": "Services collection"
+    },
+    "/system_settings/{settingId}": {
+      "schema": "object",
+      "description": "System settings collection"
+    }
+  }
+}

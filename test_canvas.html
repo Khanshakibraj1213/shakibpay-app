@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <div id="capture" style="background-color: oklch(0.5 0.1 200);">Hello</div>
+  <script>
+    const element = document.getElementById('capture');
+    
+    const originalGetPropertyValue = CSSStyleDeclaration.prototype.getPropertyValue;
+    CSSStyleDeclaration.prototype.getPropertyValue = function(prop) {
+      const val = originalGetPropertyValue.call(this, prop);
+      return val;
+    };
+    
+    html2canvas(element).then(canvas => {
+      console.log("Success");
+    }).catch(e => {
+      console.error(e);
+    });
+  </script>
+</body>
+</html>

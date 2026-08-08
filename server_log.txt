@@ -1,0 +1,40 @@
+
+> react-example@0.0.0 dev
+> tsx server.ts
+
+[Database] Loaded 11 users from Firestore.
+[Database] Loaded 48 orders from Firestore.
+[Database] Loaded 7 offers from Firestore.
+[Database] Loaded 2 notices from Firestore.
+[Database] Loaded 57 notifications from Firestore.
+[Database] Loaded persistent admin payment numbers: {
+  rocket: { merchant: '01400112233', personal: '01300112233' },
+  nagad: { merchant: '01500112233', personal: '01900112233' },
+  bkash: { merchant: '01800112233', personal: '01700112233' }
+}
+[Database] Loaded 0 card stocks from Firestore.
+[Database] Loaded 16 calling card offers from Firestore.
+[Database] Loaded maintenance mode state: false, reason: সিস্টেম মেইনটেন্যান্সের কাজ চলছে। অনুগ্রহ করে কিছুক্ষণ পর চেষ্টা করুন।, hotlines: 01635275233
+[Database] Loaded marquee speed: 16s, Currencies: 13
+Starting Telegram Bot updates polling loop...
+WebSocket server error: Port 24678 is already in use
+node:events:497
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:3000
+    at Server.setupListenHandle [as _listen2] (node:net:1941:16)
+    at listenInCluster (node:net:1998:12)
+    at node:net:2207:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1977:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3000
+}
+
+Node.js v22.23.1

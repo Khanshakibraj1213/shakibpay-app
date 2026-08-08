@@ -1,0 +1,6 @@
+{
+  "name": "Shakib Pay",
+  "description": "An advanced multi-role MFS wallet, auto mobile recharge, utility bill payment, and drive pack reseller platform with integrated Firebase persistence and Telegram remote administration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
