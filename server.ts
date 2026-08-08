@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 
-import { createServer as createViteServer } from 'vite';
+
 import { GoogleGenAI } from '@google/genai';
 import {
   getUsers,
@@ -3511,7 +3511,8 @@ async function startServer() {
   });
 
   // Vite middleware for development
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    const { createServer: createViteServer } = await import('v' + 'ite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
@@ -3526,7 +3527,7 @@ async function startServer() {
   }
 
   const PORT = Number(process.env.PORT) || 3000;
-  if (!process.env.NETLIFY) {
+  if (!process.env.NETLIFY && !process.env.VERCEL) {
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://0.0.0.0:${PORT}`);
     });
@@ -3534,7 +3535,7 @@ async function startServer() {
   return app;
 }
 
-const appPromise = startServer();
+export const appPromise = startServer();
 
 import serverless from 'serverless-http';
 export const handler = async (event: any, context: any) => {
