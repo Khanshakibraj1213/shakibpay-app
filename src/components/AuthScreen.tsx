@@ -286,11 +286,8 @@ export default function AuthScreen({ onLoginSuccess, playAudio, isAdminLoginRout
               <button
                 type="button"
                 onClick={() => {
-                  setPhone('01635275233');
-                  setPassword('Pass 018811');
-                  setPin('018811sh');
                   playAudio('click');
-                  setSuccessMsg('Admin credentials auto-filled! Please click Login.');
+                  setSuccessMsg('Welcome to Shakibpay safe');
                   setErrorMsg('');
                 }}
                 className="bg-gradient-to-r from-cyan-400 via-emerald-400 to-blue-400 bg-clip-text text-transparent font-black uppercase tracking-widest cursor-pointer hover:opacity-80 active:scale-95 transition-all"

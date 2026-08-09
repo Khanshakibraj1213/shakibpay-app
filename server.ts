@@ -1817,9 +1817,27 @@ async function startServer() {
     return res.json({ success: true, user: currentUser });
   });
 
+  app.post('/api/telegram-webhook', async (req, res) => {
+    try {
+      if (req.body) {
+        await handleTelegramUpdate(req.body);
+      }
+      res.status(200).send('OK');
+    } catch (e) {
+      console.error('Webhook error:', e);
+      res.status(500).send('Error');
+    }
+  });
+
   async function pollTelegramUpdates() {
     let offset = 0;
     console.log("Starting Telegram Bot updates polling loop...");
+    try {
+      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/deleteWebhook`);
+      console.log("[Telegram] Webhook cleared for long-polling.");
+    } catch (e) {
+      console.error("[Telegram] Failed to clear webhook:", e);
+    }
     while (true) {
       try {
         const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates?offset=${offset}&timeout=15`);
@@ -1832,6 +1850,10 @@ async function startServer() {
             }
           }
         } else {
+          if (response.status === 409) {
+            console.log("[Telegram] Conflict (409). Another instance is likely polling. Stopping this poll loop to prevent conflicts.");
+            break;
+          }
           console.error("Telegram long poll error status:", response.status);
         }
       } catch (error) {

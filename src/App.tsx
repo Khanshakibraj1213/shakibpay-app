@@ -1259,7 +1259,21 @@ export default function App() {
               }`}
             >
               <Bell className="w-4.5 h-4.5" />
-              <span className={`absolute top-0 right-0 flex h-4 w-4 items-center justify-center bg-rose-500 rounded-full border-2 text-[8px] font-bold text-white ${theme === 'dark' ? 'border-[#0B0F19]' : 'border-[#F8FAFC]'}`}>3</span>
+              {(() => {
+                try {
+                  const dismissed = JSON.parse(localStorage.getItem('dismissed_notifications') || '[]');
+                  const unreadCount = notificationsList.filter((n: any) => {
+                    if (n.targetPhone && user && n.targetPhone !== user.phone) return false;
+                    if (n.targetRole && n.targetRole !== 'All' && user && n.targetRole !== user.role) return false;
+                    return !dismissed.includes(n.id);
+                  }).length;
+                  return unreadCount > 0 ? (
+                    <span className={`absolute top-0 right-0 flex h-4 w-4 items-center justify-center bg-rose-500 rounded-full border-2 text-[8px] font-bold text-white ${theme === 'dark' ? 'border-[#0B0F19]' : 'border-[#F8FAFC]'}`}>
+                      {unreadCount}
+                    </span>
+                  ) : null;
+                } catch(e) { return null; }
+              })()}
             </button>
 
             {/* QR Scan button (Violet square) */}
@@ -1994,6 +2008,7 @@ export default function App() {
                                 <span className="text-[8px] font-mono text-neutral-400">#{order.id}</span>
                               </div>
                               <p className={`text-[9.5px] font-extrabold truncate max-w-[150px] ${theme === 'dark' ? 'text-slate-300' : 'text-neutral-500'}`}>{order.serviceName}</p>
+                              {order.account && <p className={`text-[9px] font-mono ${theme === 'dark' ? 'text-slate-400' : 'text-neutral-400'}`}>Tgt: {order.account}</p>}
                               <span className="text-[8px] font-mono text-neutral-400 block">{new Date(order.date).toLocaleDateString('bn-BD')} {new Date(order.date).toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' })}</span>
                             </div>
                           </div>
@@ -3310,6 +3325,12 @@ export default function App() {
                   <span className="text-neutral-400">গ্রাহক নম্বর:</span>
                   <span className="font-bold text-neutral-900 font-mono">{selectedInvoice.userPhone}</span>
                 </div>
+                {selectedInvoice.account && (
+                  <div className="flex justify-between">
+                    <span className="text-neutral-400">টার্গেট নম্বর:</span>
+                    <span className="font-bold text-neutral-900 font-mono">{selectedInvoice.account}</span>
+                  </div>
+                )}
                 {selectedInvoice.trxId && (
                   <div className="flex justify-between">
                     <span className="text-neutral-400">TrxID ট্রানজেকশন ID:</span>
@@ -3359,6 +3380,7 @@ export default function App() {
                       printWindow.document.write(`<p><b>Type:</b> ${selectedInvoice.type}</p>`);
                       printWindow.document.write(`<p><b>Service:</b> ${selectedInvoice.serviceName}</p>`);
                       printWindow.document.write(`<p><b>Phone:</b> ${selectedInvoice.userPhone}</p>`);
+                      if (selectedInvoice.account) printWindow.document.write(`<p><b>Target No:</b> ${selectedInvoice.account}</p>`);
                       if (selectedInvoice.trxId) printWindow.document.write(`<p><b>TrxID:</b> ${selectedInvoice.trxId}</p>`);
                       printWindow.document.write(`<p><b>Amount:</b> ৳${selectedInvoice.amount} BDT` + (showForeignCurrency ? ` / ${(selectedInvoice.amount / globalCurrencyRate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${globalCurrencyName}` : '') + `</p>`);
                       printWindow.document.write(`<p><b>Status:</b> ${selectedInvoice.status}</p>`);

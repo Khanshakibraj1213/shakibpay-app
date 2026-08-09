@@ -605,6 +605,7 @@ export default function StatementModal({ user, orders, theme, onClose }: Stateme
                           </td>
                           <td className="py-2 px-2 text-[10px]">
                             <span className="font-mono block">{ord.userPhone || 'N/A'}</span>
+                            {ord.account && <span className="font-mono text-neutral-500 text-[9px] block">Tgt: {ord.account}</span>}
                             {ord.trxId && <span className="font-mono text-indigo-500 text-[9px] block">Trx: {ord.trxId}</span>}
                           </td>
                           <td className={`py-2 px-2 text-right font-mono font-bold whitespace-nowrap ${
