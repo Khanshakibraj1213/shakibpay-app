@@ -152,8 +152,18 @@ let globalCurrencies = [
 
 async function startServer() {
   const app = express();
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ limit: '50mb', extended: true }));
+  app.use((req: any, res: any, next: any) => {
+    if (req.body && typeof req.body === 'object') {
+      return next();
+    }
+    express.json({ limit: '50mb' })(req, res, next);
+  });
+  app.use((req: any, res: any, next: any) => {
+    if (req.body && typeof req.body === 'object') {
+      return next();
+    }
+    express.urlencoded({ limit: '50mb', extended: true })(req, res, next);
+  });
   
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
@@ -1975,60 +1985,6 @@ async function startServer() {
     });
   });
 
-  // Authentication & Session Endpoints
-  app.post('/api/auth/login', (req, res) => {
-    const { loginId, password, pin } = req.body;
-    if (!loginId || !pin) {
-      return res.status(400).json({ error: "দয়া করে সকল তথ্য প্রদান করুন।" });
-    }
-
-    // Special bypass for Admin PIN/Credentials: 018811sh or Shakib1213
-    if (pin === '018811sh' || (loginId === 'Shakib1213' && password === '018811sh') || pin === 'Shakib1213') {
-      let adminUser = users.find(u => u.role === 'Admin');
-      if (!adminUser) {
-        adminUser = {
-          id: "usr-shakib",
-          name: "Shakib Raj",
-          email: "Khanshakibraj@gmail.com",
-          phone: "01635275233",
-          profilePic: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-          role: "Admin",
-          walletBalance: 12500,
-          pin: "018811sh",
-          password: "Pass 018811",
-          status: "Active",
-          commissionRate: 0,
-          walletLimit: 500000
-        };
-        users.push(adminUser);
-      } else {
-        adminUser.pin = "018811sh";
-      }
-      currentUser = adminUser;
-      return res.json({ success: true, user: currentUser });
-    }
-
-    if (!password) {
-      return res.status(400).json({ error: "দয়া করে পাসওয়ার্ড প্রদান করুন।" });
-    }
-
-    const userObj = users.find(u => u.phone === loginId || u.email === loginId);
-    if (!userObj) {
-      return res.status(400).json({ error: "ইউজার খুঁজে পাওয়া যায়নি।" });
-    }
-    if (userObj.password !== password) {
-      return res.status(400).json({ error: "ভুল পাসওয়ার্ড।" });
-    }
-    if (userObj.pin !== pin) {
-      return res.status(400).json({ error: "ভুল পিন নম্বর।" });
-    }
-    if (userObj.status === 'Suspended') {
-      return res.status(400).json({ error: "আপনার অ্যাকাউন্ট সাময়িকভাবে বন্ধ করা হয়েছে।" });
-    }
-    currentUser = userObj;
-    res.json({ success: true, user: currentUser });
-  });
-
   app.post('/api/auth/register', async (req, res) => {
     const { name, phone, email, password, pin } = req.body;
     if (!name || !phone || !email || !password || !pin) {
@@ -3548,7 +3504,7 @@ async function startServer() {
     });
   }
 
-  const PORT = Number(process.env.PORT) || 3000;
+  const PORT = 3000;
   if (!process.env.NETLIFY && !process.env.VERCEL) {
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on http://0.0.0.0:${PORT}`);
